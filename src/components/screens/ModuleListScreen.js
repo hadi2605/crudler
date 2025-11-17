@@ -24,7 +24,7 @@ const ModuleListScreen = ({ navigation }) => {
   const handleAdd = (module) => setModules([...modules, module]);
 
   const onDelete = (module) => {
-    handleAdd(module);
+    handleDelete(module);
     navigation.goBack();
   };
 
