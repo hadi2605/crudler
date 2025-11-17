@@ -13,7 +13,7 @@ const defaultModule = {
   ModuleImage: null,
 };
 
-const ModuleForm = ({ onSubmit, onCancel }) => {
+const ModuleForm = ({ originalModule, onSubmit, onCancel }) => {
   // Intialisations --------------------------
 
   ((defaultModule.ModuleID = Math.floor(100000 + Math.random() * 900000)),
@@ -29,7 +29,7 @@ const ModuleForm = ({ onSubmit, onCancel }) => {
   ];
   // State -----------------------------------
 
-  const [module, setModule] = useState(defaultModule);
+  const [module, setModule] = useState(originalModule || defaultModule);
 
   // Handlers --------------------------------
 
@@ -39,8 +39,8 @@ const ModuleForm = ({ onSubmit, onCancel }) => {
 
   //View -------------------------------------
 
-  const submitLabel = 'Add';
-  const submitIcon = <Icons.Add />;
+  const submitLabel = originalModule ? 'Modify' : 'Add';
+  const submitIcon = originalModule ? <Icons.Edit /> : <Icons.Add />;
   return (
     <Form
       onSubmit={handleSubmit}
