@@ -19,7 +19,7 @@ const ModuleView = ({ module, onDelete, onModify }) => {
   return (
     <View style={styles.container}>
       <FullWidthImage
-        source={{ uri: module.ModuleImage }}
+        source={{ uri: module.ModuleImageURL }}
         style={styles.image}
       />
 

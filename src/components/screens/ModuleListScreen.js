@@ -1,20 +1,31 @@
-import { useState } from 'react';
-import { LogBox, StyleSheet } from 'react-native';
+import { useState, useEffect } from 'react';
+import { LogBox, StyleSheet, Text } from 'react-native';
 import Screen from '../layout/Screen';
+import API from '../API/API.js';
 import Icons from '../UI/Icons.js';
 import { Button, ButtonTray } from '../UI/Button.js';
 import ModuleList from '../entity/modules/ModuleList.js';
 import RenderCount from '../UI/RenderCount.js';
-
-import initialModules from '../../data/modules.js';
 
 const ModuleListScreen = ({ navigation }) => {
   // Initialisation --------------
   LogBox.ignoreLogs([
     'Non-serializable values were found in the navigation state',
   ]);
+  const modulesEndPoint = 'https://softwarehub.uk/unibase/api/modules';
   // State ----------------
-  const [modules, setModules] = useState(initialModules);
+  const [modules, setModules] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const loadModules = async (endpoint) => {
+    const response = await API.get(endpoint);
+    setIsLoading(false);
+    if (response.isSuccess) setModules(response.result);
+  };
+
+  useEffect(() => {
+    loadModules(modulesEndPoint);
+  }, []);
 
   // Handlers -------------
 
@@ -52,10 +63,12 @@ const ModuleListScreen = ({ navigation }) => {
   // View -------------
   return (
     <Screen>
+      <RenderCount />
       <ButtonTray>
         <Button label="Add" icon={<Icons.Add />} onClick={gotoAddScreen} />
       </ButtonTray>
-      <RenderCount />
+      {isLoading && <Text>Loading records ...</Text>}
+
       <ModuleList modules={modules} onSelect={gotoViewScreen} />
     </Screen>
   );
