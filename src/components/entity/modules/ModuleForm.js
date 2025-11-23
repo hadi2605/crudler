@@ -10,14 +10,14 @@ const defaultModule = {
   ModuleLevel: null,
   ModuleLeaderID: null,
   ModuleLeaderName: null,
-  ModuleImage: null,
+  ModuleImageURL: null,
 };
 
 const ModuleForm = ({ originalModule, onSubmit, onCancel }) => {
   // Intialisations --------------------------
 
   ((defaultModule.ModuleID = Math.floor(100000 + Math.random() * 900000)),
-    (defaultModule.ModuleImage =
+    (defaultModule.ModuleImageURL =
       'https://images.freeimages.com/images/small-previews/cf5/cellphone-1313194.jpg'));
 
   const levels = [
@@ -76,8 +76,8 @@ const ModuleForm = ({ originalModule, onSubmit, onCancel }) => {
 
       <Form.InputText
         label="Module Image"
-        value={module.ModuleImage}
-        onChange={(value) => handleChange('ModuleImage', value)}
+        value={module.ModuleImageURL}
+        onChange={(value) => handleChange('ModuleImageURL', value)}
       />
     </Form>
   );
