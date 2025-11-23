@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react';
 import { LogBox, StyleSheet, Text } from 'react-native';
+import useLoad from '../API/useLoad.js';
 import Screen from '../layout/Screen';
-import API from '../API/API.js';
 import Icons from '../UI/Icons.js';
 import { Button, ButtonTray } from '../UI/Button.js';
 import ModuleList from '../entity/modules/ModuleList.js';
@@ -14,18 +13,8 @@ const ModuleListScreen = ({ navigation }) => {
   ]);
   const modulesEndPoint = 'https://softwarehub.uk/unibase/api/modules';
   // State ----------------
-  const [modules, setModules] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  const loadModules = async (endpoint) => {
-    const response = await API.get(endpoint);
-    setIsLoading(false);
-    if (response.isSuccess) setModules(response.result);
-  };
-
-  useEffect(() => {
-    loadModules(modulesEndPoint);
-  }, []);
+  const [modules, setModules, isLoading, loadModules] =
+    useLoad(modulesEndPoint);
 
   // Handlers -------------
 
