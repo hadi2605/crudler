@@ -1,5 +1,13 @@
-import { LogBox, StyleSheet, Text } from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  LogBox,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import useLoad from '../API/useLoad.js';
+import API from '../API/API.js';
 import Screen from '../layout/Screen';
 import Icons from '../UI/Icons.js';
 import { Button, ButtonTray } from '../UI/Button.js';
@@ -18,31 +26,30 @@ const ModuleListScreen = ({ navigation }) => {
 
   // Handlers -------------
 
-  const handleDelete = (module) =>
-    setModules(modules.filter((item) => item.ModuleID !== module.ModuleID));
-
-  const handleAdd = (module) => setModules([...modules, module]);
-
-  const handleModify = (updatedModule) =>
-    setModules(
-      modules.map((module) =>
-        module.ModuleID === updatedModule.ModuleID ? updatedModule : module
-      )
-    );
-
-  const onDelete = (module) => {
-    handleDelete(module);
-    navigation.goBack();
+  const onDelete = async (module) => {
+    const deletEndpoint = `${modulesEndPoint}/${module.ModuleID}`;
+    const result = await API.delete(deletEndpoint, module);
+    if (result.isSuccess) {
+      loadModules(modulesEndPoint);
+      navigation.goBack();
+    } else Alert.alert(result.message);
   };
 
-  const onAdd = (module) => {
-    handleAdd(module);
-    navigation.goBack();
+  const onAdd = async (module) => {
+    const result = await API.post(modulesEndPoint, module);
+    if (result.isSuccess) {
+      loadModules(modulesEndPoint);
+      navigation.goBack();
+    } else Alert.alert(result.message);
   };
 
-  const onModify = (module) => {
-    handleModify(module);
-    navigation.popToTop();
+  const onModify = async (module) => {
+    const putEndpoint = `${modulesEndPoint}/${module.ModuleID}`;
+    const result = await API.put(putEndpoint, module);
+    if (result.isSuccess) {
+      loadModules(modulesEndPoint);
+      navigation.replace('ModuleViewScreen', { module, onDelete, onModify });
+    } else Alert.alert(result.message);
   };
 
   const gotoViewScreen = (module) =>
@@ -54,9 +61,18 @@ const ModuleListScreen = ({ navigation }) => {
     <Screen>
       <RenderCount />
       <ButtonTray>
-        <Button label="Add" icon={<Icons.Add />} onClick={gotoAddScreen} />
+        <Button
+          label="Add Module"
+          icon={<Icons.Add />}
+          onClick={gotoAddScreen}
+        />
       </ButtonTray>
-      {isLoading && <Text>Loading records ...</Text>}
+      {isLoading && (
+        <View style={styles.spinner}>
+          <Text>Retrieving records from {modulesEndPoint} ...</Text>
+          <ActivityIndicator size="large" />
+        </View>
+      )}
 
       <ModuleList modules={modules} onSelect={gotoViewScreen} />
     </Screen>
