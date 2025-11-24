@@ -8,7 +8,7 @@ const ModuleViewScreen = ({ navigation, route }) => {
   // State ----------------
   // Handlers -------------
   const gotoModifyScreen = () =>
-    navigation.navigate('ModuleModifyScreen', { module, onModify });
+    navigation.replace('ModuleModifyScreen', { module, onModify });
   // View -------------
   return (
     <Screen>
