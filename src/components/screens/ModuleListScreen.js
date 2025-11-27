@@ -7,6 +7,7 @@ import {
   View,
 } from 'react-native';
 import useLoad from '../API/useLoad.js';
+import useStore from '../store/useStore.js';
 import API from '../API/API.js';
 import Screen from '../layout/Screen';
 import Icons from '../UI/Icons.js';
@@ -20,10 +21,11 @@ const ModuleListScreen = ({ navigation }) => {
     'Non-serializable values were found in the navigation state',
   ]);
   const modulesEndPoint = 'https://softwarehub.uk/unibase/api/modules';
-  // State ----------------
-  const [modules, setModules, isLoading, loadModules] =
-    useLoad(modulesEndPoint);
+  const loggedinUserKey = 'loggedinUser';
 
+  // State ----------------
+  const [modules, , isLoading, loadModules] = useLoad(modulesEndPoint);
+  const [loggedinUser, saveLoggedinUser] = useStore(loggedinUserKey, null);
   // Handlers -------------
 
   const onDelete = async (module) => {
@@ -59,8 +61,11 @@ const ModuleListScreen = ({ navigation }) => {
   // View -------------
   return (
     <Screen>
+      <RenderCount />
+      {loggedinUser && (
+        <Text style={styles.welcome}>Welcome {loggedinUser.UserFirstname}</Text>
+      )}
       <View style={styles.container}>
-        <RenderCount />
         <ButtonTray>
           <Button
             label="Add Module"
@@ -82,6 +87,10 @@ const ModuleListScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  welcome: {
+    margintop: 5,
+    marginBottom: 5,
+  },
   container: {
     gap: 15,
   },
