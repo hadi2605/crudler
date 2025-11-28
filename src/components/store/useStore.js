@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Alert } from 'react-native';
 
-const useStore = (key, initalRecord) => {
+const useStore = (key, initialRecord) => {
   // State --------------------------------------
-  const [record, setRecord] = useState(key, initalRecord);
+  const [record, setRecord] = useState(initialRecord);
 
   // Handlers -----------------------------------
   const loadRecord = async () => {
